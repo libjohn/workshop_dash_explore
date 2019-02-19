@@ -136,7 +136,7 @@ filter_select("shortspecies", "Species", shared_sw_eye, shortspecies)
 plot_ly(data = shared_sw_eye, x = ~mass, y = ~height, 
         color = ~eye_color, colors = sw_eye_levels,
         text = ~name, mode = "markers")   %>% 
-  layout(title = "\nStarWars Character Eye Color")
+  layout(title = "\nStarWars Character Eye Color", height = 300)
 
 
 ```

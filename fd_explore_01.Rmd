@@ -64,7 +64,7 @@ mapview(sbux_triangle, xcol = "Longitude", ycol = "Latitude", crs = 4269, grid =
 #filter_slider()
 ```
 
-> Data Scource: 2012
+> Data Scource: Starbucks 2012
 
 Column {data-width=350}
 -----------------------------------------------------------------------
@@ -84,23 +84,19 @@ plot_ly(data = sw_eye, x = ~mass, y = ~height,
   layout(title = "\nStarWars Character Eye Color")
 ```
 
-### Orange Eyes
+### Eye Color of Starwars Characters
 
 ```{r}
-oeye_bar <- ggplot(starwars) +
+ggplotly(ggplot(starwars) +
   geom_bar(aes(x = fct_rev(fct_lump(fct_infreq(eye_color), n = 6))), 
            fill = "grey") + 
   coord_flip() +
   geom_bar(data = starwars %>% filter(eye_color == "orange"),
            aes(eye_color), fill = "orange") +
-  labs(x = "Eye Color", y = "",
-       title = "Eye Color of Starwars Characters",
-       subtitle = "Oranges eyes are uncommon.",
-       caption = "Data Source: dplyr::starwars")
-
-ggplotly(oeye_bar)
+  labs(x = "", y = ""))
 ```
 
+> This is a ggplot static plot.  Data Source: dplyr::starwars
 
 Page 2 {data-icon="fa-hashtag"}
 =======================================================================
@@ -136,7 +132,7 @@ filter_select("shortspecies", "Species", shared_sw_eye, shortspecies)
 plot_ly(data = shared_sw_eye, x = ~mass, y = ~height, 
         color = ~eye_color, colors = sw_eye_levels,
         text = ~name, mode = "markers")   %>% 
-  layout(title = "\nStarWars Character Eye Color", height = 300)
+  layout(title = "\nStarWars Character Eye Color", height = 400)
 
 
 ```

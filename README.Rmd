@@ -1,0 +1,17 @@
+---
+title: README
+date: "`r Sys.Date()`"
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This repo explores code that I will use in a flexdashboards / HTMLwidgets workshop
+

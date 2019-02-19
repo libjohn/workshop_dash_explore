@@ -5,7 +5,7 @@ output:
     orientation: columns
     vertical_layout: fill
     navbar: 
-      - { icon: "fa-github", href: "https://github.com/libjohn", align: right }
+      - { icon: "fa-github", href: "https://github.com/libjohn/workshop_dash_explore", align: right }
 ---
 
 ```{r setup, include=FALSE}
@@ -123,12 +123,15 @@ Column
 ### chart 6
 
 ```{r}
+
+shortspecies <- c("Human", "Droid", "Wookiee" )
+
 shared_sw_eye <- SharedData$new(sw_eye)
 
 filter_slider("height", "Height", shared_sw_eye, ~height)
-filter_checkbox(sw_eye_levels, "Eye Color", shared_sw_eye, ~eye_color)
-
-
+#filter_checkbox("sw_eye_levels", "Eye Color", shared_sw_eye, ~eye_color)
+filter_select("hair", "Hair Color", shared_sw_eye, ~hair_color)
+filter_select("shortspecies", "Species", shared_sw_eye, shortspecies)
 
 plot_ly(data = shared_sw_eye, x = ~mass, y = ~height, 
         color = ~eye_color, colors = sw_eye_levels,

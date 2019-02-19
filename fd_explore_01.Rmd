@@ -1,0 +1,140 @@
+---
+title: "Explore 01"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    navbar: 
+      - { icon: "fa-github", href: "https://github.com/libjohn", align: right }
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(crosstalk)
+library(plotly)
+library(DT)
+library(mapview)
+
+sbux_triangle <- read_csv("data/All_Starbucks_Locations_in_the_US_-_Map.csv") %>% filter(City == "Raleigh" | City == "Durham" | City == "Chapel Hill")
+sbux_shared_data <- SharedData$new(sbux_triangle)
+
+canes <- read_csv("data/hurricanes.csv")
+canes_shared_data <- SharedData$new(canes)
+
+unique(starwars$eye_color)
+
+sw_eye <- starwars %>% 
+  filter(eye_color == str_extract(eye_color, "\\w+")) %>% 
+  filter(eye_color != "unknown", eye_color != "hazel", eye_color != "white") %>% 
+  filter(mass < 200) %>% 
+  mutate(eye_color = fct_infreq(eye_color)) 
+
+sw_eye_levels <- levels(sw_eye$eye_color)
+  
+ggplot(sw_eye, aes(mass, height)) + 
+  geom_point(aes(color = eye_color)) + 
+  scale_color_manual(values = sw_eye_levels)
+
+
+sw_eye_ggp2 <- ggplot(sw_eye, aes(mass, height)) + 
+  geom_point(aes(color = eye_color)) + 
+  scale_color_manual(values = sw_eye_levels)
+
+ggplotly(sw_eye_ggp2)
+
+plot_ly(data = sw_eye, x = ~mass, y = ~height, 
+        color = ~eye_color, colors = sw_eye_levels,
+        text = ~name, mode = "markers")   %>% 
+  layout(title = "StarWars Character EYe Color")
+
+```
+
+Page 1
+=======================================================================
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Triangle Starbucks Locations 
+
+```{r}
+mapview(sbux_triangle, xcol = "Longitude", ycol = "Latitude", crs = 4269, grid = FALSE)
+
+#filter_slider()
+```
+
+> Data Scource: 2012
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### _Star Wars_ Eye Color
+
+```{r}
+ggplotly(sw_eye_ggp2)
+```
+
+### Chart C
+
+```{r}
+plot_ly(data = sw_eye, x = ~mass, y = ~height, 
+        color = ~eye_color, colors = sw_eye_levels,
+        text = ~name, mode = "markers")   %>% 
+  layout(title = "\nStarWars Character Eye Color")
+```
+
+### Orange Eyes
+
+```{r}
+oeye_bar <- ggplot(starwars) +
+  geom_bar(aes(x = fct_rev(fct_lump(fct_infreq(eye_color), n = 6))), 
+           fill = "grey") + 
+  coord_flip() +
+  geom_bar(data = starwars %>% filter(eye_color == "orange"),
+           aes(eye_color), fill = "orange") +
+  labs(x = "Eye Color", y = "",
+       title = "Eye Color of Starwars Characters",
+       subtitle = "Oranges eyes are uncommon.",
+       caption = "Data Source: dplyr::starwars")
+
+ggplotly(oeye_bar)
+```
+
+
+Page 2 {data-icon="fa-hashtag"}
+=======================================================================
+
+Column
+-----------------------------------------------------------------------
+
+### Chart 5
+
+```{r}
+ggplotly(sw_eye %>% 
+  ggplot(aes(eye_color, fill = eye_color)) +
+  geom_bar())
+```
+
+
+Column
+-----------------------------------------------------------------------
+
+### chart 6
+
+```{r}
+shared_sw_eye <- SharedData$new(sw_eye)
+
+filter_slider("height", "Height", shared_sw_eye, ~height)
+filter_checkbox(sw_eye_levels, "Eye Color", shared_sw_eye, ~eye_color)
+
+
+
+plot_ly(data = shared_sw_eye, x = ~mass, y = ~height, 
+        color = ~eye_color, colors = sw_eye_levels,
+        text = ~name, mode = "markers")   %>% 
+  layout(title = "\nStarWars Character Eye Color")
+
+
+```
+

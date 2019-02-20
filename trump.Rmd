@@ -102,6 +102,8 @@ dygraph(lungDeaths)
 ```
 
 
-
+```{r}
+sessioninfo::session_info()
+```
 
 

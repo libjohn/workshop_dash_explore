@@ -153,3 +153,9 @@ plot_ly(data = shared_sw_eye, x = ~mass, y = ~height,
 ggplotly(ggplot(shared_sw_eye, aes(x = species)) + geom_bar() + coord_flip())
 ```
 
+Page 3
+=====================
+
+```{r}
+sessioninfo::session_info()
+```

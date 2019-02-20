@@ -16,7 +16,5 @@ knitr::opts_chunk$set(
 This repo explores code that I will use in a flexdashboards / HTMLwidgets workshop
 
 
-```{r}
-sessioninfo::session_info()
-```
+
 

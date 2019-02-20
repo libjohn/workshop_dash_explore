@@ -45,3 +45,34 @@ ggplot(allpolls, aes(x = modeldate)) +
   geom_line(aes(y = disapprove_estimate), color = "firebrick")
 ```
 
+```{r}
+data_tbl <- tibble::tibble(
+    date = seq.Date(as.Date("2016-01-01"), by = 1, length.out = 5),
+    x    = rep("chr values", 5),
+    y    = cumsum(1:5),
+    z    = cumsum(11:15) * rnorm(1))
+
+data_tbl
+
+tk_ts(data_tbl, start = 2016)
+```
+
+
+
+```{r}
+ap_4_dy <- allpolls %>% 
+  select(modeldate, approve_estimate, disapprove_estimate) %>% 
+  tk_ts()
+  #tk_ts(start = 2017) 
+
+ap_4_dy
+```
+
+
+```{r}
+ap_4_dy %>% 
+  dygraph() %>% 
+  dyRangeSelector(dateWindow = c("2017-02-01", "2018-11-30"))
+
+```
+

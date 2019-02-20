@@ -1,0 +1,47 @@
+---
+title: "trump approval rating -- time series"
+author: "John Little"
+date: "`r Sys.Date()`"
+abstract: "Put out a dygraph"
+output: html_notebook
+---
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)  # dplyr, part of tidyverse,  has spread() & gather() 
+library(lubridate)  # to coerce data into a "date" data type
+library(timetk)     # convert tibble to time series
+library(dygraphs)   # visualize time series with time slider
+```
+
+
+## Data from fiveThirtyEight.com
+
+- [approval ratings](https://github.com/fivethirtyeight/data/tree/master/trump-approval-ratings)
+- [**topline**](https://projects.fivethirtyeight.com/trump-approval-data/approval_topline.csv)
+
+
+```{r}
+trump <- read_csv("https://projects.fivethirtyeight.com/trump-approval-data/approval_topline.csv", 
+                  col_types = cols(modeldate = col_date(format = "%m/%d/%Y"), 
+                                   timestamp = col_datetime(format = "%H:%M:%S %d %b %Y ")))
+trump
+```
+
+## Munge data
+
+```{r}
+allpolls <- trump %>% 
+  filter(subgroup == "All polls")
+allpolls
+```
+
+
+
+## ggplot 
+
+```{r}
+ggplot(allpolls, aes(x = modeldate)) +
+  geom_line(aes(y = approve_estimate), color = "forestgreen") +
+  geom_line(aes(y = disapprove_estimate), color = "firebrick")
+```
+

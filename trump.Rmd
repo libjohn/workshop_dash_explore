@@ -2,15 +2,13 @@
 title: "trump approval rating -- time series"
 author: "John Little"
 date: "`r Sys.Date()`"
-abstract: "Put out a dygraph"
+abstract: "Put out a timeseries graph via ggplot2plotly"
 output: html_notebook
 ---
 
-```{r message=FALSE, warning=FALSE}
+```{r}
 library(tidyverse)  # dplyr, part of tidyverse,  has spread() & gather() 
-library(lubridate)  # to coerce data into a "date" data type
-library(timetk)     # convert tibble to time series
-library(dygraphs)   # visualize time series with time slider
+library(plotly)
 ```
 
 
@@ -40,12 +38,21 @@ allpolls
 ## ggplot 
 
 ```{r}
-ggplot(allpolls, aes(x = modeldate)) +
+ts_4_ggpltly <- ggplot(allpolls, aes(x = modeldate)) +
   geom_line(aes(y = approve_estimate), color = "forestgreen") +
   geom_line(aes(y = disapprove_estimate), color = "firebrick")
+
+ts_4_ggpltly
 ```
 
 ```{r}
+ggplotly(ts_4_ggpltly)
+```
+
+
+
+``` r
+# Example from tk_ts documentation
 data_tbl <- tibble::tibble(
     date = seq.Date(as.Date("2016-01-01"), by = 1, length.out = 5),
     x    = rep("chr values", 5),
@@ -59,20 +66,42 @@ tk_ts(data_tbl, start = 2016)
 
 
 
-```{r}
+``` r
+# Working but the x axis is bonk
 ap_4_dy <- allpolls %>% 
   select(modeldate, approve_estimate, disapprove_estimate) %>% 
-  tk_ts()
-  #tk_ts(start = 2017) 
+  tk_ts(start = 20170201) 
+
+ap_4_dy <- allpolls %>% 
+  select(modeldate, approve_estimate, disapprove_estimate) %>% 
+  #tk_ts()
+  tk_ts(start = 2017, freq = 365) 
 
 ap_4_dy
+
+#idx <- tk_index(allpolls)
 ```
 
 
-```{r}
+``` r 
+This is what was working, even with the bonk x axis
 ap_4_dy %>% 
   dygraph() %>% 
   dyRangeSelector(dateWindow = c("2017-02-01", "2018-11-30"))
 
 ```
+
+
+
+``` r
+# from dygraph documentation
+class(mdeaths)
+head(mdeaths)
+lungDeaths <- cbind(mdeaths, fdeaths)
+dygraph(lungDeaths)
+```
+
+
+
+
 

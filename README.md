@@ -1,6 +1,6 @@
 README
 ================
-2019-02-19
+2019-02-20
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 This repo explores code that I will use in a flexdashboards / HTMLwidgets workshop
@@ -17,7 +17,7 @@ sessioninfo::session_info()
 #>  collate  English_United States.1252  
 #>  ctype    English_United States.1252  
 #>  tz       America/New_York            
-#>  date     2019-02-19                  
+#>  date     2019-02-20                  
 #> 
 #> - Packages --------------------------------------------------------------
 #>  package     * version date       lib source        

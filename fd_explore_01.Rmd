@@ -28,7 +28,8 @@ sw_eye <- starwars %>%
   filter(eye_color == str_extract(eye_color, "\\w+")) %>% 
   filter(eye_color != "unknown", eye_color != "hazel", eye_color != "white") %>% 
   filter(mass < 200) %>% 
-  mutate(eye_color = fct_infreq(eye_color)) 
+  mutate(eye_color = fct_infreq(eye_color)) %>% 
+  mutate(species = fct_rev(fct_infreq(species)))
 
 sw_eye_levels <- levels(sw_eye$eye_color)
   
@@ -101,14 +102,33 @@ ggplotly(ggplot(starwars) +
 Page 2 {data-icon="fa-hashtag"}
 =======================================================================
 
+Sidebar {.sidebar}
+-----------------------------------------------------------------------
+
+```{r}
+shortspecies <- c("Human", "Droid", "Wookiee" )
+
+shared_sw_eye <- SharedData$new(sw_eye)
+
+filter_slider("height", "Height", shared_sw_eye, ~height)
+filter_select("hair", "Hair Color", shared_sw_eye, ~hair_color)
+filter_select("shortspecies", "Select Species", shared_sw_eye, shortspecies)
+filter_checkbox("sw_eye_levels", "Eye Color", shared_sw_eye, ~eye_color)
+```
+
+
+
+Link to [HOME](#page-1)
+
+
 Column
 -----------------------------------------------------------------------
 
 ### Chart 5
 
 ```{r}
-ggplotly(sw_eye %>% 
-  ggplot(aes(eye_color, fill = eye_color)) +
+ggplotly(shared_sw_eye %>% 
+  ggplot(aes(eye_color)) +
   geom_bar())
 ```
 
@@ -119,21 +139,17 @@ Column
 ### chart 6
 
 ```{r}
-
-shortspecies <- c("Human", "Droid", "Wookiee" )
-
-shared_sw_eye <- SharedData$new(sw_eye)
-
-filter_slider("height", "Height", shared_sw_eye, ~height)
-#filter_checkbox("sw_eye_levels", "Eye Color", shared_sw_eye, ~eye_color)
-filter_select("hair", "Hair Color", shared_sw_eye, ~hair_color)
-filter_select("shortspecies", "Species", shared_sw_eye, shortspecies)
-
 plot_ly(data = shared_sw_eye, x = ~mass, y = ~height, 
         color = ~eye_color, colors = sw_eye_levels,
         text = ~name, mode = "markers")   %>% 
   layout(title = "\nStarWars Character Eye Color", height = 400)
 
 
+```
+
+###  Some Guages
+
+```{r}
+ggplotly(ggplot(shared_sw_eye, aes(x = species)) + geom_bar() + coord_flip())
 ```
 

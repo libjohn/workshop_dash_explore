@@ -7,7 +7,6 @@ use leaflet, mapview, and crosstalk
 
 ```{r}
 library(tidyverse)
-library(mapview)
 library(crosstalk)
 library(DT)
 library(leaflet)
@@ -20,7 +19,11 @@ sbuxnc <- read_csv("data/All_Starbucks_Locations_in_the_US_-_Map.csv") %>%
 
 sbuxnc
 
-canes <- read_csv("data/hurricanes.csv")
+canes <- read_csv("data/hurricanes.csv") %>% 
+  select(-order, -casualties, -`damage (mn)`) %>% 
+  select(1, 2, 3, 4, 7, 10, 13, 11, 12, everything())
+  
+  glimpse(canes)
 
 canes
 ```

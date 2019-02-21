@@ -124,7 +124,7 @@ Link to [HOME](#page-1)
 Column
 -----------------------------------------------------------------------
 
-### Chart 5
+### ggplotly via geom_bar and shareddata
 
 ```{r}
 ggplotly(shared_sw_eye %>% 
@@ -136,7 +136,7 @@ ggplotly(shared_sw_eye %>%
 Column
 -----------------------------------------------------------------------
 
-### chart 6
+### plotly generated via shared data
 
 ```{r}
 plot_ly(data = shared_sw_eye, x = ~mass, y = ~height, 
@@ -147,7 +147,7 @@ plot_ly(data = shared_sw_eye, x = ~mass, y = ~height,
 
 ```
 
-###  Some Guages
+###  ggplotly generated geom_bar via shared_data
 
 ```{r}
 ggplotly(ggplot(shared_sw_eye, aes(x = species)) + geom_bar() + coord_flip())

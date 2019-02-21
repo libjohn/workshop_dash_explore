@@ -1,0 +1,26 @@
+---
+title: "linking & Brushing"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(plotly)
+library(crosstalk)
+```
+
+
+```{r}
+sd <- SharedData$new(txhousing, ~city)
+p <- ggplot(sd, aes(date, median)) + geom_line()
+gg <- ggplotly(p, tooltip = "city")
+
+# Persistent mode can still be enabled in this case by holding the
+# shift key when hovering over lines
+
+bscols(highlight(gg, on = "plotly_hover", dynamic = TRUE),
+
+# Persistent mode can be set permanently like so
+highlight(gg, on = "plotly_hover", dynamic = TRUE, persistent = TRUE))
+```
+

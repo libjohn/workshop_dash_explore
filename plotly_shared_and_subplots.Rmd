@@ -1,0 +1,78 @@
+---
+title: "plotly - linking without shiny"
+output: html_notebook
+---
+
+- [linking without shiny](https://plotly-book.cpsievert.me/linking-views-without-shiny.html#linking-views-without-shiny)
+- [subplots](https://plotly-book.cpsievert.me/merging-plotly-objects.html) -- merging multiple plotly objects
+
+```{r}
+library(tidyverse)
+library(plotly)
+library(crosstalk)
+```
+
+## Munge Data
+
+take `dplyr::starwars` and mungin it into `crostalk::SharedData`
+
+```{r}
+sw_eye <- starwars %>% 
+  filter(eye_color == str_extract(eye_color, "\\w+")) %>% 
+  filter(eye_color != "unknown", eye_color != "hazel", eye_color != "white") %>% 
+  filter(mass < 200) %>% 
+  mutate(eye_color = fct_infreq(eye_color)) %>% 
+  mutate(species = fct_rev(fct_infreq(species)))
+
+sw_eye_levels <- levels(sw_eye$eye_color)
+
+shared_sw_eye <- SharedData$new(sw_eye)
+```
+
+##  Build Plotly objects
+
+```{r}
+vertbar <- ggplotly(shared_sw_eye %>% 
+  ggplot(aes(eye_color)) +
+  geom_bar())
+
+scatter <- plot_ly(data = shared_sw_eye, x = ~mass, y = ~height, 
+        color = ~eye_color, colors = sw_eye_levels,
+        text = ~name, mode = "markers")   %>% 
+  layout(title = "\nStarWars Character Eye Color", height = 400)
+
+horbar <- ggplotly(ggplot(shared_sw_eye, aes(x = species)) + geom_bar() + coord_flip())
+```
+
+
+
+```{r}
+
+subplot(vertbar, scatter)
+
+```
+
+```{r}
+subplot(scatter, horbar, nrows = 2)
+```
+
+## linking & Brushing w/o Shiny
+
+**Selection**: [Transient v persistent](https://plotly-book.cpsievert.me/linking-views-without-shiny.html#transient-versus-persistent-selection)
+
+
+```{r}
+sd <- SharedData$new(txhousing, ~city)
+p <- ggplot(sd, aes(date, median)) + geom_line()
+gg <- ggplotly(p, tooltip = "city")
+
+# Persistent mode can still be enabled in this case by holding the
+# shift key when hovering over lines
+
+bscols(highlight(gg, on = "plotly_hover", dynamic = TRUE),
+
+# Persistent mode can be set permanently like so
+highlight(gg, on = "plotly_hover", dynamic = TRUE, persistent = TRUE))
+```
+
+

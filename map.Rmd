@@ -1,0 +1,92 @@
+---
+title: "crosstalk map"
+output: html_notebook
+---
+
+use leaflet, mapview, and crosstalk
+
+```{r}
+library(tidyverse)
+library(mapview)
+library(crosstalk)
+library(DT)
+library(leaflet)
+```
+
+
+```{r}
+sbuxnc <- read_csv("data/All_Starbucks_Locations_in_the_US_-_Map.csv") %>%
+  filter(State == "NC")
+
+sbuxnc
+
+canes <- read_csv("data/hurricanes.csv")
+
+canes
+```
+
+
+``` r
+sbuxnc %>% 
+  leaflet(width = "100%") %>% 
+  addTiles() %>% 
+  setView(-78.8310, 35.9867, zoom = 10) %>% 
+  addMarkers(lat = ~Latitude, 
+             lng = ~Longitude, 
+             popup = ~Name)
+```
+
+
+``` r
+canes %>% 
+  leaflet(width = "100%") %>% 
+  addTiles() %>% 
+  addMarkers(lat = ~COUNTRY_LAT, 
+             lng = ~COUNTRY_LON, 
+             popup = ~storm)
+
+
+canes %>% 
+  leaflet(width = "100%") %>% 
+  addTiles() %>% 
+  addMarkers(lat = ~US_LAT, 
+             lng = ~US_LON, 
+             popup = ~storm)
+```
+
+
+
+```{r echo=FALSE, warning=FALSE}
+sd_canes <- SharedData$new(canes)
+
+canes_origin <- sd_canes %>% 
+  leaflet(width = "100%") %>% 
+  addTiles() %>% 
+  addMarkers(lat = ~COUNTRY_LAT, 
+             lng = ~COUNTRY_LON, 
+             popup = ~storm)
+
+canes_table <- datatable(sd_canes, extensions="Scroller", style="bootstrap", class="compact", width="100%",
+    options=list(deferRender=TRUE, scrollY=300, scroller=TRUE))
+```
+
+``` r
+filter_slider("peak", "Peak Wind Speed", sd_canes, column=~`peak wind`, step=10, width=250)
+filter_checkbox("usafct", "US Landfall", sd_canes, ~`us affected`, inline = TRUE)
+bscols(canes_origin)
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+filter_slider("peak", "Peak Wind Speed", sd_canes, column=~`peak wind`, step=10, width=250)
+filter_checkbox("usafct", "US Landfall", sd_canes, ~`us affected`, inline = TRUE)
+
+canes_origin
+
+canes_table
+```
+
+
+
+

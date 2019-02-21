@@ -1,0 +1,47 @@
+---
+title: "shared_not"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(plotly)
+library(crosstalk)
+```
+
+
+```{r}
+sw_eye <- starwars %>% 
+  filter(eye_color == str_extract(eye_color, "\\w+")) %>% 
+  filter(eye_color != "unknown", eye_color != "hazel", eye_color != "white") %>% 
+  filter(mass < 200) %>% 
+  mutate(eye_color = fct_infreq(eye_color)) %>% 
+  mutate(species = fct_rev(fct_infreq(species)))
+
+sw_eye_levels <- levels(sw_eye$eye_color)
+
+#shared_sw_eye <- SharedData$new(sw_eye)
+```
+
+
+
+```{r}
+vertbar <- ggplotly(sw_eye %>% 
+  ggplot(aes(eye_color)) +
+  geom_bar())
+
+scatter <- plot_ly(data = sw_eye, x = ~mass, y = ~height, 
+        color = ~eye_color, colors = sw_eye_levels,
+        text = ~name, mode = "markers")   %>% 
+  layout(title = "\nStarWars Character Eye Color", height = 400)
+
+horbar <- ggplotly(ggplot(sw_eye, aes(x = species)) + geom_bar() + coord_flip())
+```
+
+
+
+```{r}
+subplot(vertbar, scatter)
+subplot(scatter, horbar, nrows = 2)
+```
+

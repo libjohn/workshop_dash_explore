@@ -4,6 +4,7 @@ output:
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
+    logo: rfun_thumb.png
     navbar: 
       - { icon: "fa-github", href: "https://github.com/libjohn/workshop_dash_explore", align: right }
 ---

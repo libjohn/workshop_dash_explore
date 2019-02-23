@@ -157,6 +157,15 @@ ggplotly(ggplot(shared_sw_eye, aes(x = species)) + geom_bar() + coord_flip())
 Page 3
 =====================
 
+### Box 1
+
+```{r}
+valueBox("51", caption = "Eye Comments", icon = "fa-comments")
+```
+
+
+### Box 2
+
 ```{r}
 sessioninfo::session_info()
 ```

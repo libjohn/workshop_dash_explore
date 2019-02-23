@@ -2,6 +2,7 @@
 2. make a more lovely flexdashboard example
 3. make some exercises
 4. (Ideal:  time series with gauges that reaction to timeline of Trump Approval Ratings).  
+5. annimations
 
 
 content

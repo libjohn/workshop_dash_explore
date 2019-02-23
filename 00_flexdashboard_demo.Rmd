@@ -1,0 +1,123 @@
+---
+title: "FlexDashboard Demo"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    navbar: 
+      - { icon: "fa-github", href: "https://github.com/libjohn/workshop_dash_explore", align: right }
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(crosstalk)
+library(flexdashboard)
+library(plotly)
+library(summarywidget)
+library(DT)
+library(leaflet)
+```
+
+```{r}
+sw_eye <- starwars %>% 
+  filter(eye_color == str_extract(eye_color, "\\w+")) %>% 
+  filter(eye_color != "unknown", 
+         eye_color != "hazel", 
+         eye_color != "white") %>% 
+  filter(mass < 200) %>% 
+  mutate(eye_color = fct_infreq(eye_color)) %>% 
+  mutate(species = fct_rev(fct_infreq(species)))
+
+sw_eye_levels <- levels(sw_eye$eye_color)
+
+shared_sw_eye <- SharedData$new(sw_eye)
+```
+
+```{r}
+scatter <- plot_ly(data = shared_sw_eye, x = ~mass, y = ~height, 
+        color = ~eye_color, colors = sw_eye_levels,
+        text = ~name, mode = "markers")   %>% 
+  layout(title = "Height by Mass + Eye Color")
+```
+
+
+Star Wars Characters
+=============================================================
+
+Sidebar1 {.sidebar}
+-----------------------------------------------------------------------
+
+```{r}
+filter_slider("height", "Height", shared_sw_eye, ~height)
+filter_select("hair", "Hair Color", shared_sw_eye, ~hair_color)
+filter_select("shortspecies", "Select Species", shared_sw_eye, ~species)
+filter_checkbox("sw_eye_levels", "Eye Color", shared_sw_eye, ~eye_color, columns = 2)
+
+```
+
+
+
+`r summarywidget(shared_sw_eye, 'count', 'eye_color', selection=~eye_color=="black")` Characters with **Black Eyes**
+
+<big>`r summarywidget(shared_sw_eye, statistic='count', column='eye_color')` Total Characters</big>
+
+
+Column
+-----------------------------------------------------------------------
+
+### Character height by mass 
+
+```{r}
+scatter
+```
+
+> Data Source:  [dplyr::starwars](https://dplyr.tidyverse.org/reference/starwars.html)
+
+Hurricane Origins {data-icon="fa-map"}
+===========================================================
+
+```{r}
+canes <- read_csv("data/hurricanes.csv") %>% 
+  select(-order, -casualties, -`damage (mn)`) %>% 
+  select(1, 2, 3, 4, 7, 10, 13, 11, 12, everything())
+
+sd_canes <- SharedData$new(canes)
+
+canes_map <- sd_canes %>% 
+  leaflet(width = "100%") %>% 
+  addTiles() %>% 
+  addMarkers(lat = ~COUNTRY_LAT, 
+             lng = ~COUNTRY_LON, 
+             popup = ~storm)
+
+canes_table <- datatable(sd_canes, extensions="Scroller", style="bootstrap", class="compact", width="100%",
+    options=list(deferRender=TRUE, scrollY=300, scroller=TRUE))
+```
+
+
+Sidebar2 {.sidebar}
+-----------------------------------------------------------------------
+
+```{r}
+filter_slider("peak", "Peak Wind Speed", sd_canes, column=~`peak wind`, step=10)
+filter_checkbox("usafct", "US Landfall", sd_canes, ~`us affected`, inline = TRUE)
+```
+
+
+Column
+-----------------
+
+###
+
+```{r}
+canes_map
+```
+
+### 
+
+```{r}
+canes_table
+```
+
+> Data Source:  [Practice Dataset](https://github.com/libjohn/workshop_dash_explore/blob/master/data/hurricanes.csv)
+

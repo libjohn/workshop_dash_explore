@@ -1,0 +1,71 @@
+---
+title: "gauge experiment"
+output: 
+  flexdashboard::flex_dashboard:
+    vertical_layout: scroll
+---
+
+```{r}
+library(tidyverse)
+library(crosstalk)
+library(flexdashboard)
+library(plotly)
+library(summarywidget)
+```
+
+```{r}
+sw_eye <- starwars %>% 
+  filter(eye_color == str_extract(eye_color, "\\w+")) %>% 
+  filter(eye_color != "unknown", 
+         eye_color != "hazel", 
+         eye_color != "white") %>% 
+  filter(mass < 200) %>% 
+  mutate(eye_color = fct_infreq(eye_color)) %>% 
+  mutate(species = fct_rev(fct_infreq(species)))
+
+sw_eye_levels <- levels(sw_eye$eye_color)
+
+shared_sw_eye <- SharedData$new(sw_eye)
+```
+
+
+```{r}
+scatter <- plot_ly(data = shared_sw_eye, x = ~mass, y = ~height, 
+        color = ~eye_color, colors = sw_eye_levels,
+        text = ~name, mode = "markers")   %>% 
+  layout(title = "\nStarWars Character Eye Color", height = 400)
+```
+### Chart B
+
+```{r}
+
+#valueBox(count(shared_sw_eye %>% select(eye_color)), icon = "fa-pencil")
+valueBox("51", caption = "Eye Comments", icon = "fa-pencil")
+#valueBox(summarywidget(shared_sw_eye, statistic='count', column='eye_color'), caption = "Eye Comments", icon = "fa-comments")
+```
+
+
+
+### Chart 2
+
+```{r}
+filter_slider("mass01", "Mass", shared_sw_eye, ~mass, width = "40%")
+
+summarywidget(shared_sw_eye, statistic='count', column='eye_color')
+
+scatter
+```
+
+> There are `r summarywidget(shared_sw_eye, statistic='count', column='eye_color')` people with XXX eyes
+
+
+### Chart 3
+
+```{r}
+summarywidget(shared_sw_eye, statistic='count', column='eye_color')
+#glimpse(sw_eye)
+# height, mass;  FCT = eye_color ; species ; CHR  = hair_color , skin_color 
+```
+
+
+

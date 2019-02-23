@@ -1,5 +1,5 @@
 ---
-title: "FlexDashboard Demo"
+title: "Interactivity Demo"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
@@ -37,7 +37,7 @@ shared_sw_eye <- SharedData$new(sw_eye)
 scatter <- plot_ly(data = shared_sw_eye, x = ~mass, y = ~height, 
         color = ~eye_color, colors = sw_eye_levels,
         text = ~name, mode = "markers")   %>% 
-  layout(title = "Height by Mass + Eye Color")
+  layout(title = "Mass by Height + Eye Color")
 ```
 
 
@@ -65,13 +65,52 @@ filter_checkbox("sw_eye_levels", "Eye Color", shared_sw_eye, ~eye_color, columns
 Column
 -----------------------------------------------------------------------
 
-### Character height by mass 
+### Characters: Mass by Height 
 
 ```{r}
 scatter
 ```
 
 > Data Source:  [dplyr::starwars](https://dplyr.tidyverse.org/reference/starwars.html)
+
+Easy Plotly / Time Series
+=========================================================
+
+trump data
+```{r}
+trump <- read_csv("https://projects.fivethirtyeight.com/trump-approval-data/approval_topline.csv", 
+                  col_types = cols(modeldate = col_date(format = "%m/%d/%Y"), 
+                                   timestamp = col_datetime(format = "%H:%M:%S %d %b %Y ")))
+
+trump_over_under <- trump %>% 
+  filter(subgroup == "All polls") %>% 
+  select(modeldate, approve_estimate, disapprove_estimate) %>%
+  gather("pol_type", "score", -modeldate)
+```
+
+
+### ggplot
+
+```{r fig.height=2, fig.width=6}
+trump_over_under <- ggplot(trump_over_under, aes(x = modeldate, y = score, color = pol_type)) +
+  geom_line() +
+  scale_color_manual(values = c("forestgreen", "firebrick"),
+                     labels = c("Approve", "Disapprove")) +
+  labs(x = "Date", y = "Approval Rating",
+       color = "",
+       caption = "Data Source:  fivethirtyeight.com")
+
+trump_over_under
+```
+
+### Plotly via ggplotly
+
+
+```{r}
+ggplotly(trump_over_under)
+```
+
+
 
 Hurricane Origins {data-icon="fa-map"}
 ===========================================================
@@ -104,6 +143,8 @@ filter_checkbox("usafct", "US Landfall", sd_canes, ~`us affected`, inline = TRUE
 ```
 
 
+**Linked Brusing** is possible via the `crosstalk` library package:  crostalk::SharedData$new(df)
+
 Column
 -----------------
 
@@ -121,3 +162,16 @@ canes_table
 
 > Data Source:  [Practice Dataset](https://github.com/libjohn/workshop_dash_explore/blob/master/data/hurricanes.csv)
 
+Resources
+=============================================================
+
+###  Library Packages
+
+- `flexdashboard` -- Mangage Dashboard Layouts (includes guagues)
+- `crosstalk` -- Enables linked brushing i.e. shared data
+
+    - Interactive **CrossTalk enabled HTML Widgets**:
+    - plotly (easies:  `ggpplotly(ggpplot_object)`)
+    - `DT`  -- displays tabular data
+    - `leaflet` -- shows maps
+    - `summarywidget` (sum, mean, count, etc.)

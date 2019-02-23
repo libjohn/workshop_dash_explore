@@ -37,16 +37,6 @@ trump_over_under
 ```
 
 
-```{r}
-ggplot(trump_over_under, aes(x = modeldate, y = score, color = pol_type)) +
-  geom_line() +
-  scale_color_manual(values = c("forestgreen", "firebrick"),
-                     labels = c("Approve", "Disapprove")) +
-  labs(x = "Date", y = "Approval Rating",
-       color = "",
-       caption = "Data Source:  fivethirtyeight.com")
-```
-
 
 ## ggplot 
 

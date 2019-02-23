@@ -28,19 +28,36 @@ trump
 ## Munge data
 
 ```{r}
-allpolls <- trump %>% 
-  filter(subgroup == "All polls")
-allpolls
+trump_over_under <- trump %>% 
+  filter(subgroup == "All polls") %>% 
+  select(modeldate, approve_estimate, disapprove_estimate) %>%
+  gather("pol_type", "score", -modeldate)
+
+trump_over_under
 ```
 
+
+```{r}
+ggplot(trump_over_under, aes(x = modeldate, y = score, color = pol_type)) +
+  geom_line() +
+  scale_color_manual(values = c("forestgreen", "firebrick"),
+                     labels = c("Approve", "Disapprove")) +
+  labs(x = "Date", y = "Approval Rating",
+       color = "",
+       caption = "Data Source:  fivethirtyeight.com")
+```
 
 
 ## ggplot 
 
 ```{r}
-ts_4_ggpltly <- ggplot(allpolls, aes(x = modeldate)) +
-  geom_line(aes(y = approve_estimate), color = "forestgreen") +
-  geom_line(aes(y = disapprove_estimate), color = "firebrick")
+ts_4_ggpltly <- ggplot(trump_over_under, aes(x = modeldate, y = score, color = pol_type)) +
+  geom_line() +
+  scale_color_manual(values = c("forestgreen", "firebrick"),
+                     labels = c("Approve", "Disapprove")) +
+  labs(x = "Date", y = "Approval Rating",
+       color = "",
+       caption = "Data Source:  fivethirtyeight.com")
 
 ts_4_ggpltly
 ```

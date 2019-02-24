@@ -1,8 +1,8 @@
-1. use guages and icon boxes
-2. make a more lovely flexdashboard example
+1. [x] use guages and icon boxes
+2. [x] make a more lovely flexdashboard example
 3. make some exercises
-4. (Ideal:  time series with gauges that reaction to timeline of Trump Approval Ratings).  
-5. annimations
+4. [x] (Ideal:  time series with gauges that reaction to timeline of Trump Approval Ratings).  
+5. [x] annimations
 
 
 content

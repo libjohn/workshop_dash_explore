@@ -171,9 +171,9 @@ Annimate
 
 <img src = "https://i0.wp.com/www.r-graph-gallery.com/wp-content/uploads/2018/01/333_Animated_Cartogram_8.gif?ssl=1">
 
-Another option is to annimate a plot.  We don't discuss that in this workshop, but you can look at the [gganimate](https://gganimate.com/) page to learn more.
 
-> https://www.r-graph-gallery.com/cartogram/
+
+> Another option is to annimate a plot.  We don't discuss that in this workshop, but you can look at the [gganimate](https://gganimate.com/) page to learn more.  Image Credit:  https://www.r-graph-gallery.com/cartogram/
 
 
 Resources

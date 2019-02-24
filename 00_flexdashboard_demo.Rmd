@@ -166,6 +166,17 @@ canes_table
 
 > Data Source:  [Practice Dataset](https://github.com/libjohn/workshop_dash_explore/blob/master/data/hurricanes.csv)
 
+Exercises
+==============================================================
+
+###  
+
+1. [Easy interactive](exercise_timeseries.html) ggplot2 via `plotlly::ggplotly()` **answers**
+
+1. [Linked Brushing via Shared Data](exercise_crosstalk_map.html)  **answers**
+
+1. [Putting it all together](exercise_all_together.html) (layouts, shared data, filters, gauges, value boxes)  **answers**
+
 Animate
 ==============================================================
 

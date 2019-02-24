@@ -1,7 +1,7 @@
 ---
 title: "Exercise flexdashboards"
 subtitle:  "Display HTML widgets"
-output: html_notebook
+output: html_document
 ---
 
 Start by developing a basic flexdashboard layout then insert plots into columns in your dashboard.   If time exists, generate linked plots with shared data and use at least one crosstalk filter (`filter_slider`, `filter_checkbox`, `filter_select`).  As time allows add other linked HTML widgets.   If you're still here, develop a new dashboard with an alternative layouts.  Add some flexdashboard components:  e.g. gauges or value boxes.

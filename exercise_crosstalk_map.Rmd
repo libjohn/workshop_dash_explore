@@ -1,7 +1,7 @@
 ---
 title: "Exercise crosstalk map"
 subtitle:  "linked brushing with DT & leaflet"
-output: html_notebook
+output: html_document
 ---
 
 ## Library Packages
